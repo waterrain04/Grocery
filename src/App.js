@@ -1,14 +1,21 @@
 import { useState,useEffect} from "react";
-import Content from "./Content";
-import Header from "./Header";
-import Footer from "./Footer";
-import AddItem from "./AddItem";
-import SearchItem from "./SearchItem";
+import Content from "./component/Content";
+import Header from "./component/Header";
+import Footer from "./component/Footer";
+import AddItem from "./component/AddItem";
+import SearchItem from "./component/SearchItem";
 function App() {
 
-  const [items ,setItems] =  useState(JSON.parse(localStorage.getItem('shoppingList')))
+  const [items ,setItems] =  useState(JSON.parse(localStorage.getItem("shoppingList"))|| [])
     const[ newItem, setNewItem] = useState("");
     const [search, setSearch] = useState("");
+
+  
+    useEffect(()=>{
+      localStorage.setItem("shoppingList", JSON.stringify(items))
+
+    },[items])
+
 
     const handleSubmit = (e) =>{
       e.preventDefault();
@@ -17,24 +24,23 @@ function App() {
       setNewItem("")
     }
   
+
+
     const addItem = (item) =>{
       const id = items.length ? items[items.length-1].id+1 : 1
       const myNewItem = { id, checked:false, item}
       const listItems = [...items, myNewItem]
       setItems(listItems)
-      localStorage.setItem("shoppingList", JSON.stringify(listItems))
     }
   
     const handleCheck = (id) =>{
       const listItems = items.map(item => item.id === id ? {...item, checked:!item.checked}: item )
       setItems(listItems)
-      localStorage.setItem("shoppingList", JSON.stringify(listItems))
     }
   
     const handleDelete = (id) => {
       const listItems = items.filter ( item => item.id !==id )
       setItems(listItems)
-      localStorage.setItem("shoppingList", JSON.stringify(listItems))
     }
   
   return (
